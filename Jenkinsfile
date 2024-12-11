@@ -1,4 +1,4 @@
-// second fenkinsfile attempt
+/* // second fenkinsfile attempt
 pipeline {
   agent { label "linux" }
   stages {
@@ -17,7 +17,7 @@ pipeline {
       }  
     }
   }  
-}
+} */
 
 
 

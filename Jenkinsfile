@@ -1,26 +1,25 @@
 pipeline {
-    agent any
-stages {
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/SabrinaAG-PS/jenkins-pipeline.git'
-            }
+  agent any
+
+  stages {
+    stage('Build Docker Image') {
+      steps {
+        script {
+          docker.build("flask-app", "-f Dockerfile .")
         }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build("sample-flask-app:v1")
-                }
-            }
-        }
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        dockerImage.push()
-                    }
-                }
-            }
-        }
+      }
     }
+
+    stage('Run Docker Container') {
+      steps {
+          sh 'docker run -d -p 8080:8080 flask-app'
+      }
+    }
+  }
+
+  post {
+    always {
+      sh 'echo "Running on port 8080" '
+    }
+  }
 }
